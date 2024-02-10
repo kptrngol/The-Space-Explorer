@@ -6,13 +6,13 @@
 
 // Functions initialization
 
-void SyInitializeEntity(EnEntity * globalEntityList, int entityCounter)
+void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter)
 {
     srand(time(NULL));
     int x,y,xmin,xmax,ymin,ymax;
-    xmin = 10;
-    ymin = 10;
-    xmax = 1270;
+    xmin = 60;
+    ymin = 0;
+    xmax = 1260;
     ymax = 950;
 
     for (int i = 0; i < entityCounter; i++)
@@ -27,6 +27,22 @@ void SyInitializeEntity(EnEntity * globalEntityList, int entityCounter)
         globalEntityList[i].CoPosition.y = y;
     }
 
+}
+
+void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, int specialEntityFirstId, int specialEntityCounter, int type, int radius)
+{
+    for (int i = specialEntityFirstId; i < specialEntityCounter; i++)
+    {
+        if (type == 1)
+        {
+            globalEntityList[i].CoSpecialBehaviour.type1 = 1;
+            globalEntityList[i].color = MAGENTA;
+            globalEntityList[i].CoSpecialBehaviour.type1Radius = radius;
+        } else if (type == 2)
+        {
+            globalEntityList[i].CoSpecialBehaviour.type2 = 1;
+        }
+    }
 }
 
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor)
@@ -97,10 +113,16 @@ void SyRenderEntity(EnEntity *globalEntityList, int entityCounter)
         {
             DrawRectangle(globalEntityList[i].CoPosition.x, globalEntityList[i].CoPosition.y, 10, 10, globalEntityList[i].color);
         }
+
+        if (globalEntityList[i].CoSpecialBehaviour.type1 == 1)
+        {
+            DrawCircleLines(globalEntityList[i].CoPosition.x+5, globalEntityList[i].CoPosition.y+5, globalEntityList[i].CoSpecialBehaviour.type1Radius, GOLD);
+        }
+
     }
 }
 
-void SyDetectCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
+void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
 {
 
     // Collecting player position
@@ -113,9 +135,12 @@ void SyDetectCollision(EnEntity *globalEntityList, EnEntity *additionalEntityLis
 
         if ((abs(playerX - globalEntityList[i].CoPosition.x) < radius) && (abs(playerY - globalEntityList[i].CoPosition.y) < radius))
         {
+            // SyEndGame()
             globalEntityList[i].color = RED;
         }
     }
 }
+
+
 
 // void SyRenderCollisionCircle
