@@ -9,27 +9,30 @@ int main (void)
 
     // Initialization
 
+    // Declarations
     const int screenWidth = 1280;
     const int screenHeight = 960;
+    const int entitiesNumber = 100;
 
-    EnEntity globalEntityList[500];
-    SyInitializeEntity(globalEntityList,500);
+    EnEntity globalEntityList[entitiesNumber];
+    
+    SyInitializeEntity(globalEntityList,entitiesNumber);
     SyPositionSingleEntity(globalEntityList,0,0,0);
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     SetTargetFPS(60);
 
-    InitWindow(screenWidth, screenHeight, "platformer Demo");
+    InitWindow(screenWidth, screenHeight, "matrixGame");
     while (!WindowShouldClose())
     {
         SyMoveSingleEntity(globalEntityList,0);
-
+        SyDetectCollision(globalEntityList,globalEntityList,entitiesNumber,10);
         BeginDrawing();
 
         ClearBackground(BLACK);
 
-        SyRenderEntity(globalEntityList,500);
-        SyGravity(globalEntityList,500);
-        SyResetPosition(globalEntityList,500,screenHeight);
+        SyRenderEntity(globalEntityList,entitiesNumber);
+        SyGravity(globalEntityList,entitiesNumber);
+        SyResetPosition(globalEntityList,entitiesNumber,screenHeight);
         
         EndDrawing();
     }

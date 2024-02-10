@@ -22,13 +22,17 @@ typedef struct EnEntity
 
 // Declare functions
 
-void SyInitializeEntity(EnEntity * globalEntityList, int entityCounter);
-void SyPositionSingleEntity(EnEntity * globalEntityList, int entityId, int x, int y);
-void SyColorSingleEntity(EnEntity * globalEntityList, int entityId,Color ChoosenColor);
-void SyMoveSingleEntity(EnEntity * globalEntityList, int entityId);
-void SyRenderEntity(EnEntity * globalEntityList, int entityCounter);
-void SyGravity(EnEntity * globalEntityList, int entityCounter);
-void SyResetPosition(EnEntity * globalEntityList, int entityCounter, int screenHeight);
+ 
+
+void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter);
+void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int y);
+void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor);
+void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId);
+void SyRenderEntity(EnEntity *globalEntityList, int entityCounter);
+void SyGravity(EnEntity *globalEntityList, int entityCounter);
+void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight);
+void SyDetectCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius);
+
 
 
 #endif

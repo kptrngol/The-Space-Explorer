@@ -29,13 +29,13 @@ void SyInitializeEntity(EnEntity * globalEntityList, int entityCounter)
 
 }
 
-void SyColorSingleEntity(EnEntity * globalEntityList, int entityId,Color ChoosenColor)
+void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor)
 {
     globalEntityList[entityId].color = ChoosenColor;
 
 }
 
-void SyPositionSingleEntity(EnEntity * globalEntityList, int entityId, int x, int y)
+void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int y)
 {
     globalEntityList[entityId].CoPosition.status = 1;
     globalEntityList[entityId].CoPosition.x = x;
@@ -43,7 +43,7 @@ void SyPositionSingleEntity(EnEntity * globalEntityList, int entityId, int x, in
 
 }
 
-void SyMoveSingleEntity(EnEntity * globalEntityList, int entityId) 
+void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId) 
 {
 
     if (IsKeyDown(KEY_RIGHT))
@@ -68,7 +68,7 @@ void SyMoveSingleEntity(EnEntity * globalEntityList, int entityId)
     }
    
 }
-void SyGravity(EnEntity * globalEntityList, int entityCounter)
+void SyGravity(EnEntity *globalEntityList, int entityCounter)
 {
 
     for (int i = 1; i <= entityCounter;i++)
@@ -77,7 +77,8 @@ void SyGravity(EnEntity * globalEntityList, int entityCounter)
     }
 
 }
-void SyResetPosition(EnEntity * globalEntityList, int entityCounter, int screenHeight)
+
+void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight)
 {
     for (int i = 1; i <= entityCounter; i++)
     {
@@ -88,7 +89,7 @@ void SyResetPosition(EnEntity * globalEntityList, int entityCounter, int screenH
     }
 }
 
-void SyRenderEntity(EnEntity * globalEntityList, int entityCounter)
+void SyRenderEntity(EnEntity *globalEntityList, int entityCounter)
 {
     for (int i = 0; i < entityCounter; i++)
     {
@@ -99,5 +100,22 @@ void SyRenderEntity(EnEntity * globalEntityList, int entityCounter)
     }
 }
 
-// Declare Entity arrays
+void SyDetectCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
+{
 
+    // Collecting player position
+
+    int playerX = globalEntityList[0].CoPosition.x;
+    int playerY = globalEntityList[0].CoPosition.y;
+
+    for (int i = 1; i <= entityCounter; i++)
+    {
+
+        if ((abs(playerX - globalEntityList[i].CoPosition.x) < radius) && (abs(playerY - globalEntityList[i].CoPosition.y) < radius))
+        {
+            globalEntityList[i].color = RED;
+        }
+    }
+}
+
+// void SyRenderCollisionCircle
