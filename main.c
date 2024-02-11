@@ -7,54 +7,57 @@
 int main (void)
 {
 
-    // Initialization
-
-    // Texture
-
     Texture2D background;
+    Texture2D meteor;
+    Texture2D meteor20;
+    Texture2D meteor30;
+    Texture2D meteor60;
 
-    // Declarations
-    const int screenWidth = 1280;
-    const int screenHeight = 960;
-    const int redObstacleCount = 15;
-    const int greenObstacleCount = 100;
-    const int entitiesNumber = 1 + greenObstacleCount + redObstacleCount;
-    // entities {1x player, 100x green obstacles, 15x red obstacles}
-    const int specialEntityFirstId = entitiesNumber - redObstacleCount;
+    InitWindow(0, 0, "matrixGame");
 
-    EnEntity globalEntityList[entitiesNumber];
-    
-    SyInitializeEntity(globalEntityList,entitiesNumber);
-    SyInitializeSpecialEntity (globalEntityList, entitiesNumber, specialEntityFirstId, entitiesNumber, 1, 70);
-    SyPositionSingleEntity(globalEntityList,0,0,0);
-    SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
-    SetTargetFPS(60);
-
-    InitWindow(screenWidth, screenHeight, "matrixGame");
-
-    
-    // Load textures
     background = LoadTexture("./assets/background.png");
+    meteor = LoadTexture("./assets/meteor.png");
+    meteor20 = LoadTexture("./assets/meteor.png");
+    meteor30 = LoadTexture("./assets/meteor.png");
+    meteor60 = LoadTexture("./assets/meteor.png");
 
+    const int screenWidth = GetMonitorWidth(0);
+    const int screenHeight = GetMonitorHeight(0);
+    
+    SyLoadEntities(redMeteors, 10, globalEntityList, 300, &SyLoadEntitiesCounter);
+    SyLoadEntities(greenMeteors, 10, globalEntityList, 300, &SyLoadEntitiesCounter);
 
+    SyInitializeEntity(globalEntityList,entitiesNumber, screenWidth, screenHeight);
+    
+    SyInitializeSpecialEntity (globalEntityList, entitiesNumber, specialEntityFirstId, entitiesNumber, 1, 70);
+
+    // SyAssignTextures(globalEntityList, entitiesNumber);
+    SyPositionSingleEntity(globalEntityList,0,0,0);
+    
+    SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
+    
+    SetTargetFPS(60);
+    ToggleFullscreen();
 
     while (!WindowShouldClose())
     {
 
-        SyMoveSingleEntity(globalEntityList,0);
-        
+        SyMoveSingleEntity(globalEntityList,0,1010);
+        SyGravity(globalEntityList,entitiesNumber, 1);
         SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,10);
+        
         BeginDrawing();
-
         ClearBackground(BLACK);
         DrawTexture(background,0,0,WHITE);
-
-        SyRenderEntity(globalEntityList,entitiesNumber);
-        SyGravity(globalEntityList,entitiesNumber);
-        SyResetPosition(globalEntityList,entitiesNumber,screenHeight);
-        
+        SyRenderEntity(globalEntityList,entitiesNumber, meteor);
         EndDrawing();
+
+        SyResetPosition(globalEntityList,entitiesNumber,screenHeight);
+
+        // SyResetCollisionStatus(globalEntityList, entitiesNumber);
     }
+
+    // freeAssets();
 
     CloseWindow();
     return 0;
