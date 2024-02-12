@@ -78,19 +78,20 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, i
 {
     for (int i = specialEntityFirstId; i < specialEntityCounter; i++)
     {
+        globalEntityList[i].type.typeId = specialEntityFirstId;
+        globalEntityList[i].type.typeAmount = specialEntityCounter;
         if (type == 1)
         {
             
-            globalEntityList[i].specialBehaviour.type1 = 1;
+            globalEntityList[i].type.type = 1;
             globalEntityList[i].color = RED;
-            globalEntityList[i].specialBehaviour.type1Radius = radius;
+            globalEntityList[i].type.typeRadius = radius;
 
         } else if (type == 2)
         {
             
-            globalEntityList[i].specialBehaviour.type2 = 1;
-            globalEntityList[i].color = GREEN;
-
+            globalEntityList[i].type.type = 2;
+            
         }
     }
 }
@@ -121,20 +122,20 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHe
 // 
 
 
-void SyRenderEntity(EnEntity *globalEntityList, int entityCounter, Texture2D texture)
+void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D texture, int textureNumber)
 {
-    for (int i = 0; i < entityCounter; i++)
+    for (int i = specialEntityFirstId; i < specialEntityCounter; i++)
     {
-        if (globalEntityList[i].position.status != 0) 
+        if (type == 1)
+        {
+            DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
+            printf("hey");            
+            // DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].type.typeRadius, GOLD);
+        
+        } else if (type == 2)
         {
             DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
         }
-
-        if (globalEntityList[i].specialBehaviour.type1 == 1)
-        {
-            DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].specialBehaviour.type1Radius, GOLD);
-        }
-
     }
 }
 
@@ -214,9 +215,9 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed)
 
 // void SyRenderCollisionCircle()
 // {
-//     if (globalEntityList[i].specialBehaviour.type1 == 1)
+//     if (globalEntityList[i].type.type == 1)
 //     {
-//         if ((abs(playerX - globalEntityList[i].position.x) < globalEntityList[i].specialBehaviour.type1Radius) && (abs(playerY - globalEntityList[i].position.y) < globalEntityList[i].specialBehaviour.type1Radius))
+//         if ((abs(playerX - globalEntityList[i].position.x) < globalEntityList[i].type.typeRadius) && (abs(playerY - globalEntityList[i].position.y) < globalEntityList[i].type.typeRadius))
 //         {
 //             globalEntityList[i].position.y +;
 //         }

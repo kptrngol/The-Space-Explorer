@@ -15,14 +15,15 @@ typedef struct CoCollision
     int status;
 }CoCollision;
 
-typedef struct CoSpecialBehaviour
+typedef struct CoType
 {
     int status;
-    int type1;
-    int type2;
-    int type1Radius;
+    int type;
+    int typeRadius;
+    int typeId;
+    int typeAmount;
 
-}CoSpecialBehaviour;
+}CoType;
 
 typedef struct CoTexture
 {
@@ -40,7 +41,7 @@ typedef struct EnEntity
     CoPosition position;
     CoCollision collision;
     Color color;
-    CoSpecialBehaviour specialBehaviour;
+    CoType type;
 }EnEntity;
 
 
@@ -69,7 +70,7 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, i
 void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int y);
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor);
 void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed);
-void SyRenderEntity(EnEntity *globalEntityList, int entityCounter, Texture2D texture);
+void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D texture, int textureNumber);
 void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration);
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight);
 void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);

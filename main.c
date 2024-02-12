@@ -21,8 +21,7 @@ int main (void)
     meteor30 = LoadTexture("./assets/meteor.png");
     meteor60 = LoadTexture("./assets/meteor.png");
 
-    Texture2D globalTextureList[10] = {meteor};
-
+    Texture2D globalTextureList[10] = {meteor, meteor20, meteor30, meteor60};
 
     const int screenWidth = GetMonitorWidth(0);
     const int screenHeight = GetMonitorHeight(0);
@@ -53,9 +52,13 @@ int main (void)
         SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,10);
         
         BeginDrawing();
+        
         ClearBackground(BLACK);
         DrawTexture(background,0,0,WHITE);
-        SyRenderEntity(globalEntityList,entitiesNumber, meteor);
+
+        SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 1, meteor30,0);
+        SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, meteor,2);
+
         EndDrawing();
 
         SyResetPosition(globalEntityList,entitiesNumber,screenHeight);
