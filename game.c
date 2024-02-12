@@ -4,23 +4,33 @@
 #include <time.h>
 #include "game.h"
 
-// variables definition
+// Variables definition
+
 
 int SyLoadEntitiesCounter;
 int specialEntityFirstId;
+
 EnEntity player[1];
-EnEntity redMeteors[100];
-EnEntity greenMeteors[100];
+
+EnEntity redMeteors[10];
+int redMeteorsAmount = sizeof(redMeteors)/sizeof(redMeteors[0]);
+int redMeteorsId;
+
+EnEntity greenMeteors[5];
+int greenMeteorsAmount = sizeof(greenMeteors)/sizeof(greenMeteors[0]);
+int greenMeteorsId;
+
+Texture2D globalTextureList[10];
+
 EnEntity globalEntityList[300];
-int entitiesNumber = 201;
 
 // Functions initialization
 
 
-
-int SyLoadEntitiesCounter = 0;
+int entitiesNumber = 0;
 int SyLoadEntities(EnEntity *source, int sourceSize, EnEntity *target, int targetSize, int *lastElementCounter)
 {
+    int entitiesBatchId = *lastElementCounter;
     if ((*lastElementCounter) + sourceSize > targetSize)
     {
         printf("Exceeded the maximum set number of entities");
@@ -33,9 +43,11 @@ int SyLoadEntities(EnEntity *source, int sourceSize, EnEntity *target, int targe
         }
         *lastElementCounter += sourceSize; 
     }
+    return entitiesBatchId;
 
 }
 
+// Assign components initial values + random position
 void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight)
 {
     srand(time(NULL));
@@ -44,7 +56,6 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
     ymin = 0;
     xmax = screenWidth - 30;
     ymax = screenHeight;
-
 
     for (int i = 0; i < entityCounter; i++)
     {
@@ -62,7 +73,6 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
 }
 
 // Entity initialiser based on entity type.
-
 int specialEntityFirstId = 0;
 void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, int specialEntityFirstId, int specialEntityCounter, int type, int radius)
 {
@@ -70,33 +80,85 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, i
     {
         if (type == 1)
         {
+            
             globalEntityList[i].specialBehaviour.type1 = 1;
-            globalEntityList[i].color = MAGENTA;
+            globalEntityList[i].color = RED;
             globalEntityList[i].specialBehaviour.type1Radius = radius;
+
         } else if (type == 2)
         {
+            
             globalEntityList[i].specialBehaviour.type2 = 1;
+            globalEntityList[i].color = GREEN;
+
         }
     }
 }
 
-void SyAssignTextures(EnEntity *globalEntityList, int entityCounter)
+// Placement related functions 
+
+void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration)
+{
+
+    for (int i = 1; i <= entityCounter;i++)
+    {
+        globalEntityList[i].position.y += gravityAcceleration;
+    }
+
+}
+
+void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight)
+{
+    for (int i = 1; i <= entityCounter; i++)
+    {
+        if (globalEntityList[i].position.y >= screenHeight)
+        {
+            globalEntityList[i].position.y = 0;
+        }
+    }
+}
+
+// 
+
+
+void SyRenderEntity(EnEntity *globalEntityList, int entityCounter, Texture2D texture)
 {
     for (int i = 0; i < entityCounter; i++)
     {
-        if (globalEntityList[i].texture.status != 0) 
+        if (globalEntityList[i].position.status != 0) 
         {
+            DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
+        }
 
-            if (globalEntityList[i].specialBehaviour.type1 == 1)
-            {
-                // DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].specialBehaviour.type1Radius, GOLD);
-            }
-            
+        if (globalEntityList[i].specialBehaviour.type1 == 1)
+        {
+            DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].specialBehaviour.type1Radius, GOLD);
         }
 
     }
 }
 
+void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
+{
+
+    // Collecting player position
+
+    int playerX = globalEntityList[0].position.x;
+    int playerY = globalEntityList[0].position.y;
+
+    for (int i = 1; i <= entityCounter; i++)
+    {
+
+        if ((abs(playerX - globalEntityList[i].position.x) < radius) && (abs(playerY - globalEntityList[i].position.y) < radius))
+        {
+            // SyEndGame()
+            globalEntityList[i].collision.status = 1;
+            globalEntityList[i].color = BLACK;
+        }
+    }
+}
+
+// Single entity tools (color, position, assign controls)
 
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor)
 {
@@ -137,63 +199,9 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed)
     }
    
 }
-void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration)
-{
 
-    for (int i = 1; i <= entityCounter;i++)
-    {
-        globalEntityList[i].position.y += gravityAcceleration;
-    }
 
-}
 
-void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight)
-{
-    for (int i = 1; i <= entityCounter; i++)
-    {
-        if (globalEntityList[i].position.y >= screenHeight)
-        {
-            globalEntityList[i].position.y = 0;
-        }
-    }
-}
-
-void SyRenderEntity(EnEntity *globalEntityList, int entityCounter, Texture2D texture)
-{
-    for (int i = 0; i < entityCounter; i++)
-    {
-        if (globalEntityList[i].position.status != 0) 
-        {
-            DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
-        }
-
-        if (globalEntityList[i].specialBehaviour.type1 == 1)
-        {
-            DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].specialBehaviour.type1Radius, GOLD);
-        }
-
-    }
-}
-
-void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
-{
-
-    // Collecting player position
-
-    int playerX = globalEntityList[0].position.x;
-    int playerY = globalEntityList[0].position.y;
-
-    for (int i = 1; i <= entityCounter; i++)
-    {
-
-        if ((abs(playerX - globalEntityList[i].position.x) < radius) && (abs(playerY - globalEntityList[i].position.y) < radius))
-        {
-            // SyEndGame()
-            globalEntityList[i].collision.status = 1;
-            globalEntityList[i].color = RED;
-        }
-    }
-}
 
 // void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter)
 // {
