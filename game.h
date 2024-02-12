@@ -15,7 +15,6 @@ typedef struct CoCollision
     int status;
 }CoCollision;
 
-
 typedef struct CoSpecialBehaviour
 {
     int status;
@@ -31,28 +30,37 @@ typedef struct CoTexture
     Texture2D texture;
 }CoTexture;
 
+
 // Declare entities
 
 typedef struct EnEntity 
 {
     int id;
-    Color color;
-    CoPosition position;
-    CoSpecialBehaviour specialBehaviour;
-    CoCollision collision;
     CoTexture texture;
+    CoPosition position;
+    CoCollision collision;
+    Color color;
+    CoSpecialBehaviour specialBehaviour;
 }EnEntity;
+
+
+// Declare variables
 
 extern int SyLoadEntitiesCounter;
 extern int specialEntityFirstId;
 extern EnEntity player[1];
-extern EnEntity redMeteors[100];
-extern EnEntity greenMeteors[100];
+extern EnEntity redMeteors[10];
+extern EnEntity greenMeteors[5];
 extern EnEntity globalEntityList[300];
+extern int redMeteorsAmount;
+extern int greenMeteorsAmount;
 extern int entitiesNumber;
+extern int redMeteorsId;
+extern int greenMeteorsId;
+extern Texture2D globalTextureList[10];
+
 
 // Declare functions
-
  
 int SyLoadEntities(EnEntity *source, int sourceSize, EnEntity *target, int targetSize, int *lastElementCounter);
 void SyAssignTextures(EnEntity *globalEntityList, int entityCounter);

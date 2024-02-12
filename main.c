@@ -6,7 +6,7 @@
 
 int main (void)
 {
-
+    // Declaring and loading textures after window initialisation
     Texture2D background;
     Texture2D meteor;
     Texture2D meteor20;
@@ -21,19 +21,25 @@ int main (void)
     meteor30 = LoadTexture("./assets/meteor.png");
     meteor60 = LoadTexture("./assets/meteor.png");
 
+    Texture2D globalTextureList[10] = {meteor};
+
+
     const int screenWidth = GetMonitorWidth(0);
     const int screenHeight = GetMonitorHeight(0);
     
-    SyLoadEntities(redMeteors, 10, globalEntityList, 300, &SyLoadEntitiesCounter);
-    SyLoadEntities(greenMeteors, 10, globalEntityList, 300, &SyLoadEntitiesCounter);
+    // Loading entities into one array and saving their ID - array position index
+    redMeteorsId = SyLoadEntities(redMeteors, redMeteorsAmount , globalEntityList, 300, &entitiesNumber);
+    greenMeteorsId = SyLoadEntities(greenMeteors, greenMeteorsAmount , globalEntityList, 300, &entitiesNumber);
 
+    // Assigning default components to all entities
     SyInitializeEntity(globalEntityList,entitiesNumber, screenWidth, screenHeight);
     
-    SyInitializeSpecialEntity (globalEntityList, entitiesNumber, specialEntityFirstId, entitiesNumber, 1, 70);
+    // Characterising entities
+    SyInitializeSpecialEntity(globalEntityList, redMeteorsId, redMeteorsAmount, entitiesNumber, 1, 70);
+    SyInitializeSpecialEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, entitiesNumber, 2, 70);
 
-    // SyAssignTextures(globalEntityList, entitiesNumber);
+    // Setting up the player model
     SyPositionSingleEntity(globalEntityList,0,0,0);
-    
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     
     SetTargetFPS(60);
@@ -57,7 +63,14 @@ int main (void)
         // SyResetCollisionStatus(globalEntityList, entitiesNumber);
     }
 
-    // freeAssets();
+    // Unload textures
+
+    UnloadTexture(background);
+    UnloadTexture(meteor);
+    UnloadTexture(meteor20);
+    UnloadTexture(meteor30);
+    UnloadTexture(meteor60);
+
 
     CloseWindow();
     return 0;
