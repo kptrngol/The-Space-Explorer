@@ -27,6 +27,7 @@ int main (void)
     const int screenHeight = GetMonitorHeight(0);
     
     // Loading entities into one array and saving their ID - array position index
+    playerId = SyLoadEntities(player, playerAmount , globalEntityList, 300, &entitiesNumber);
     redMeteorsId = SyLoadEntities(redMeteors, redMeteorsAmount , globalEntityList, 300, &entitiesNumber);
     greenMeteorsId = SyLoadEntities(greenMeteors, greenMeteorsAmount , globalEntityList, 300, &entitiesNumber);
 
@@ -34,6 +35,7 @@ int main (void)
     SyInitializeEntity(globalEntityList,entitiesNumber, screenWidth, screenHeight);
     
     // Characterising entities
+    SyInitializeSpecialEntity(globalEntityList, playerId, playerAmount, entitiesNumber, 0, 70);    
     SyInitializeSpecialEntity(globalEntityList, redMeteorsId, redMeteorsAmount, entitiesNumber, 1, 70);
     SyInitializeSpecialEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, entitiesNumber, 2, 70);
 
@@ -46,25 +48,30 @@ int main (void)
 
     while (!WindowShouldClose())
     {
+        if (!gameLost) {
+            SyMoveSingleEntity(globalEntityList,0,1010);
+            SyGravity(globalEntityList,entitiesNumber, gravityAcceleration);
+            SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,100);
+            SyDetectCircleCollision(globalEntityList,entitiesNumber,10, &gravityAcceleration);
+            
+            BeginDrawing();
+            
+            ClearBackground(BLACK);
+            DrawTexture(background,0,0,WHITE);
 
-        SyMoveSingleEntity(globalEntityList,0,1010);
-        SyGravity(globalEntityList,entitiesNumber, 1);
-        SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,10);
-        
-        BeginDrawing();
-        
-        ClearBackground(BLACK);
-        DrawTexture(background,0,0,WHITE);
+            SyRenderEntity(globalEntityList, playerId, playerAmount, 0, meteor30,0);
+            SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, meteor60,0);
+            SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, meteor,2);
 
-        SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 1, meteor30,0);
-        SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, meteor,2);
+            EndDrawing();
 
-        EndDrawing();
-
-        SyResetPosition(globalEntityList,entitiesNumber,screenHeight);
-
-        // SyResetCollisionStatus(globalEntityList, entitiesNumber);
-    }
+            SyResetPosition(globalEntityList,entitiesNumber, screenWidth, screenHeight);
+            // SyResetCollisionStatus(globalEntityList, entitiesNumber);
+        } else 
+        {
+            return 0;
+        }
+    } 
 
     // Unload textures
 

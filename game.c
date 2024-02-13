@@ -5,12 +5,17 @@
 #include "game.h"
 
 // Variables definition
+int gameLost = 0;
+
+int gravityAcceleration = 1;
 
 
 int SyLoadEntitiesCounter;
 int specialEntityFirstId;
 
 EnEntity player[1];
+int playerAmount = 1;
+int playerId;
 
 EnEntity redMeteors[10];
 int redMeteorsAmount = sizeof(redMeteors)/sizeof(redMeteors[0]);
@@ -76,20 +81,21 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
 int specialEntityFirstId = 0;
 void SyInitializeSpecialEntity (EnEntity *globalEntityList, int entityCounter, int specialEntityFirstId, int specialEntityCounter, int type, int radius)
 {
-    for (int i = specialEntityFirstId; i < specialEntityCounter; i++)
-    {
-        globalEntityList[i].type.typeId = specialEntityFirstId;
-        globalEntityList[i].type.typeAmount = specialEntityCounter;
-        if (type == 1)
+    for (int i = specialEntityFirstId; i < specialEntityFirstId+specialEntityCounter; i++)
+    {   
+        if(type == 0) {
+            globalEntityList[i].type.type = 0;
+            globalEntityList[i].color = GOLD;
+        }
+        else if (type == 1)
         {
-            
             globalEntityList[i].type.type = 1;
             globalEntityList[i].color = RED;
-            globalEntityList[i].type.typeRadius = radius;
+            globalEntityList[i].collision.circleRadius = radius;
 
         } else if (type == 2)
         {
-            
+            globalEntityList[i].collision.circleRadius = radius;            
             globalEntityList[i].type.type = 2;
             
         }
@@ -108,34 +114,33 @@ void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceler
 
 }
 
-void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight)
+void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight)
 {
+        srand(time(NULL));
+        int x,xmin,xmax;
+        xmin = 60;
+        xmax = screenWidth - 30;
+
+        
     for (int i = 1; i <= entityCounter; i++)
     {
         if (globalEntityList[i].position.y >= screenHeight)
         {
+            x = xmin + rand() % (xmax - xmin + 1);
+
+            globalEntityList[i].position.x = x;
             globalEntityList[i].position.y = 0;
+            globalEntityList[i].color = WHITE;
+
         }
     }
 }
 
-// 
-
-
 void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D texture, int textureNumber)
 {
-    for (int i = specialEntityFirstId; i < specialEntityCounter; i++)
+    for (int i = specialEntityFirstId; i < specialEntityFirstId+specialEntityCounter; i++)
     {
-        if (type == 1)
-        {
-            DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
-            printf("hey");            
-            // DrawCircleLines(globalEntityList[i].position.x+5, globalEntityList[i].position.y+5, globalEntityList[i].type.typeRadius, GOLD);
-        
-        } else if (type == 2)
-        {
-            DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
-        }
+        DrawTexture(texture,globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
     }
 }
 
@@ -201,7 +206,44 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed)
    
 }
 
+void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, int *gravityAcceleration)
+{
 
+    // int playerX = globalEntityList[0].position.x;
+    // int playerY = globalEntityList[0].position.y;
+
+    // for (int i = ++playerId; i <= entityCounter; i++)
+    // {
+    //     // if (globalEntityList[i].type.type == 2)
+    //     // {
+    //         if ((abs(playerX - globalEntityList[i].position.x) < globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].position.y) < globalEntityList[i].collision.circleRadius))
+    //         {
+    //             (*gravityAcceleration)+100;
+    //         }
+    //     // }
+
+    // }
+
+    // Collecting player position
+
+    int playerX = globalEntityList[0].position.x;
+    int playerY = globalEntityList[0].position.y;
+
+    for (int i = 1; i <= entityCounter; i++)
+    {
+
+        if ((abs(playerX - globalEntityList[i].position.x) < radius) && (abs(playerY - globalEntityList[i].position.y) < radius))
+        {
+            (*gravityAcceleration)+=10;
+
+        }
+    }
+
+
+
+
+}
+    
 
 
 // void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter)
@@ -212,15 +254,3 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed)
 //         globalEntityList[i].color = GREEN;
 //     }
 // }
-
-// void SyRenderCollisionCircle()
-// {
-//     if (globalEntityList[i].type.type == 1)
-//     {
-//         if ((abs(playerX - globalEntityList[i].position.x) < globalEntityList[i].type.typeRadius) && (abs(playerY - globalEntityList[i].position.y) < globalEntityList[i].type.typeRadius))
-//         {
-//             globalEntityList[i].position.y +;
-//         }
-//     }
-// }
-    

@@ -13,14 +13,14 @@ typedef struct CoPosition
 typedef struct CoCollision
 {
     int status;
+    int circle;
+    int circleRadius;
 }CoCollision;
 
 typedef struct CoType
 {
     int status;
     int type;
-    int typeRadius;
-    int typeId;
     int typeAmount;
 
 }CoType;
@@ -46,6 +46,9 @@ typedef struct EnEntity
 
 
 // Declare variables
+extern int gameLost;
+
+extern int gravityAcceleration;
 
 extern int SyLoadEntitiesCounter;
 extern int specialEntityFirstId;
@@ -53,9 +56,11 @@ extern EnEntity player[1];
 extern EnEntity redMeteors[10];
 extern EnEntity greenMeteors[5];
 extern EnEntity globalEntityList[300];
+extern int playerAmount;
 extern int redMeteorsAmount;
 extern int greenMeteorsAmount;
 extern int entitiesNumber;
+extern int playerId;
 extern int redMeteorsId;
 extern int greenMeteorsId;
 extern Texture2D globalTextureList[10];
@@ -72,10 +77,10 @@ void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenC
 void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed);
 void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D texture, int textureNumber);
 void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration);
-void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenHeight);
-void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);
+void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight);
+// void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);
 void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius);
-
+void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, int *gravityAcceleration);
 
 
 #endif
