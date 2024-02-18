@@ -34,10 +34,10 @@ int main (void)
     // Assigning default components to all entities
     SyInitializeEntity(globalEntityList,entitiesNumber, screenWidth, screenHeight);
     
-    // Characterising entities
-    SyInitializeSpecialEntity(globalEntityList, playerId, playerAmount, entitiesNumber, 0, 70);    
-    SyInitializeSpecialEntity(globalEntityList, redMeteorsId, redMeteorsAmount, entitiesNumber, 1, 70);
-    SyInitializeSpecialEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, entitiesNumber, 2, 70);
+    // Characterising entities with Player's ID as 0
+    SyInitializeSpecialEntity(globalEntityList, playerId, playerAmount, 0, 0);    
+    SyInitializeSpecialEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, 0);
+    SyInitializeSpecialEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, 200);
 
     // Setting up the player model
     SyPositionSingleEntity(globalEntityList,0,0,0);
@@ -52,24 +52,26 @@ int main (void)
             SyMoveSingleEntity(globalEntityList,0,1010);
             SyGravity(globalEntityList,entitiesNumber, gravityAcceleration);
             SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,100);
-            SyDetectCircleCollision(globalEntityList,entitiesNumber,10, &gravityAcceleration);
+            SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
             
             BeginDrawing();
-            
             ClearBackground(BLACK);
             DrawTexture(background,0,0,WHITE);
+            DrawText(TextFormat("gravityAcceleration: %d", gravityAcceleration), 0, 0, 20, RED);
 
-            SyRenderEntity(globalEntityList, playerId, playerAmount, 0, meteor30,0);
-            SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, meteor60,0);
-            SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, meteor,2);
+            SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
+            SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
+            SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, globalTextureList,2);
 
             EndDrawing();
 
             SyResetPosition(globalEntityList,entitiesNumber, screenWidth, screenHeight);
-            // SyResetCollisionStatus(globalEntityList, entitiesNumber);
         } else 
         {
-            return 0;
+            BeginDrawing();
+            ClearBackground(BLACK);
+            DrawText("GAME OVER", 0, 0, 20, RED);
+
         }
     } 
 
