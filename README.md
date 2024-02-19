@@ -10,6 +10,7 @@ To do:
 - update entity x and y coordinates with considerations of texture dimmensions.
 - update gravity Acceleration value into float
 - random texture generator
+- fixing ship acceleration (speedX)
 
 - end game point
 - end game screen

@@ -8,7 +8,7 @@ int main (void)
 {
     // Declaring and loading textures after window initialisation
     Texture2D background;
-    Texture2D meteor;
+    Texture2D starship;
     Texture2D meteor20;
     Texture2D meteor30;
     Texture2D meteor60;
@@ -16,12 +16,12 @@ int main (void)
     InitWindow(0, 0, "matrixGame");
 
     background = LoadTexture("./assets/background.png");
-    meteor = LoadTexture("./assets/meteor.png");
+    starship = LoadTexture("./assets/starship.png");
     meteor20 = LoadTexture("./assets/meteor.png");
     meteor30 = LoadTexture("./assets/meteor.png");
     meteor60 = LoadTexture("./assets/meteor.png");
 
-    Texture2D globalTextureList[10] = {meteor, meteor20, meteor30, meteor60};
+    Texture2D globalTextureList[10] = {starship, meteor20, meteor30, meteor60};
 
     const int screenWidth = GetMonitorWidth(0);
     const int screenHeight = GetMonitorHeight(0);
@@ -49,7 +49,7 @@ int main (void)
     while (!WindowShouldClose())
     {
         if (!gameLost) {
-            SyMoveSingleEntity(globalEntityList,0,1010);
+            SyMoveSingleEntity(globalEntityList,0,&speedX);
             SyGravity(globalEntityList,entitiesNumber, gravityAcceleration);
             SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,100);
             SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
@@ -58,6 +58,7 @@ int main (void)
             ClearBackground(BLACK);
             DrawTexture(background,0,0,WHITE);
             DrawText(TextFormat("gravityAcceleration: %d", gravityAcceleration), 0, 0, 20, RED);
+            DrawText(TextFormat("speed: %f", speedX), 20, 20, 20, RED);
 
             SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
             SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
@@ -78,7 +79,7 @@ int main (void)
     // Unload textures
 
     UnloadTexture(background);
-    UnloadTexture(meteor);
+    UnloadTexture(starship);
     UnloadTexture(meteor20);
     UnloadTexture(meteor30);
     UnloadTexture(meteor60);

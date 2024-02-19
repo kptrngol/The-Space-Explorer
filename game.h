@@ -65,6 +65,8 @@ extern int redMeteorsId;
 extern int greenMeteorsId;
 extern Texture2D globalTextureList[10];
 
+extern float speedX;
+extern float speedY;
 
 // Declare functions
  
@@ -74,7 +76,7 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
 void SyInitializeSpecialEntity (EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, int radius);
 void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int y);
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor);
-void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, int speed);
+void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX);
 void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D *texture, int textureNumber);
 void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration);
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight);
@@ -82,5 +84,6 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
 void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius);
 void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, int *gravityAcceleration);
 
+float speed(float x);
 
 #endif
