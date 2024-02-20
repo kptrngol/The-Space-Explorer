@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "game.h"
 
@@ -40,7 +41,7 @@ int main (void)
     SyInitializeSpecialEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, 200);
 
     // Setting up the player model
-    SyPositionSingleEntity(globalEntityList,0,0,0);
+    SyPositionSingleEntity(globalEntityList,0,0,screenHeight/2);
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     
     SetTargetFPS(60);
@@ -49,20 +50,25 @@ int main (void)
     while (!WindowShouldClose())
     {
         if (!gameLost) {
+            scrollingBack -= 10.5f;
+            if (abs(scrollingBack) >= background.width*3) { scrollingBack = 0.0f;}
             SyMoveSingleEntity(globalEntityList,0,&speedX);
             SyGravity(globalEntityList,entitiesNumber, gravityAcceleration);
             SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,100);
             SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
             
             BeginDrawing();
-            ClearBackground(BLACK);
-            DrawTexture(background,0,0,WHITE);
-            DrawText(TextFormat("gravityAcceleration: %d", gravityAcceleration), 0, 0, 20, RED);
-            DrawText(TextFormat("speed: %f", speedX), 20, 20, 20, RED);
 
-            SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
-            SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
-            SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, globalTextureList,2);
+                ClearBackground(BLACK);
+                DrawTextureEx(background,(Vector2){scrollingBack,0}, 0.0f, 3.0f,WHITE);
+                DrawTextureEx(background,(Vector2){background.width*3,0}, 0.0f, 3.0f,WHITE);
+                DrawText(TextFormat("scroll: %f", scrollingBack), 0, 20, 20, RED);
+                DrawText(TextFormat("gravityAcceleration: %d", gravityAcceleration), 0, 40, 20, RED);
+                DrawText(TextFormat("speed: %f", speedX), 0, 60, 20, RED);
+
+                SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
+                SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
+                SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, globalTextureList,2);
 
             EndDrawing();
 

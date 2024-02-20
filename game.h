@@ -68,6 +68,7 @@ extern Texture2D globalTextureList[10];
 extern float speedX;
 extern float speedY;
 
+extern float scrollingBack;
 // Declare functions
  
 int SyLoadEntities(EnEntity *source, int sourceSize, EnEntity *target, int targetSize, int *lastElementCounter);
