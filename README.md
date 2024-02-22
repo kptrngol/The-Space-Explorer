@@ -7,17 +7,20 @@ This exercise was focused on:
 - first ECS-like system implementation
 
 To do:
-- update entity x and y coordinates with considerations of texture dimmensions.
-- update gravity Acceleration value into float
-- random texture generator
-- fixing ship acceleration (speedX)
 
-- end game point
-- end game screen
-- play again option
+- texture randomizer (rotation, size)
+- story dialog box module
+- menu module and play again  
+- distance dashboard
+- save game data (score)
+- instalation package for linux
+- adding soundtrack
 
-Game screen:
-![Game screen](./assets/screen.png)
+optionally: 
+
+- better textures 
+
+![gameplay](./assets/screen.gif)
 
 Credits:
 
