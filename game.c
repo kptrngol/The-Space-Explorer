@@ -7,7 +7,7 @@
 // Variables definition
 int gameLost = 0;
 
-int gravityAcceleration = 1;
+float gravityAcceleration = 2.0f;
 
 
 int SyLoadEntitiesCounter;
@@ -29,8 +29,10 @@ Texture2D globalTextureList[10];
 
 EnEntity globalEntityList[300];
 
-float speedX = 1;
-float speedY = 0;
+float speedX = 0.0f;
+float speedY = 0.0f;
+
+float scrollingBack = 0.0f;
 
 // Functions initialization
 
@@ -73,6 +75,7 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
 
         globalEntityList[i].id = i;
         globalEntityList[i].color = WHITE;
+        globalEntityList[i].collision.circleColor = WHITE;
         globalEntityList[i].position.status = 1;
         globalEntityList[i].position.x = x;
         globalEntityList[i].position.y = y;
@@ -107,12 +110,12 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int specialEntityFir
 
 // Placement related functions 
 
-void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceleration)
+void SyGravity(EnEntity *globalEntityList, int entityCounter, float gravityAcceleration)
 {
 
     for (int i = 1; i <= entityCounter;i++)
     {
-        globalEntityList[i].position.y += gravityAcceleration;
+        globalEntityList[i].position.x -= gravityAcceleration;
     }
 
 }
@@ -120,18 +123,18 @@ void SyGravity(EnEntity *globalEntityList, int entityCounter, int gravityAcceler
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight)
 {
         srand(time(NULL));
-        int x,xmin,xmax;
-        xmin = 200;
-        xmax = screenWidth - 30;
+        int y,ymin,ymax;
+        ymin = 0;
+        ymax = screenHeight;
         
     for (int i = 1; i <= entityCounter; i++)
     {
-        if (globalEntityList[i].position.y >= screenHeight)
+        if (globalEntityList[i].position.x <= 0)
         {
-            x = xmin + rand() % (xmax - xmin + 1);
+            y = ymin + rand() % (ymax - ymin + 1);
 
-            globalEntityList[i].position.x = x;
-            globalEntityList[i].position.y = 0;
+            globalEntityList[i].position.x = screenWidth;
+            globalEntityList[i].position.y = y;
             
             switch(globalEntityList[i].type.type)
             {
@@ -144,6 +147,7 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
                     break;
                 case 2:
                     globalEntityList[i].color = GREEN;
+                    globalEntityList[i].collision.circleColor = WHITE;
                     break;
             
             }
@@ -159,7 +163,7 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
         DrawTexture(texture[textureNumber],globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
         if (globalEntityList[i].type.type == 2) 
         {
-            DrawCircleLines(globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].collision.circleRadius, WHITE);
+            DrawCircleLines(globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].collision.circleRadius, globalEntityList[i].collision.circleColor);
         }
     }
 }
@@ -200,47 +204,56 @@ void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int
 
 }
 
-void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX) 
+void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX, int screenWidth, int screenHeight) 
 {
     float speedY;
-    if ((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP))&&(*speedX)<20)
+    if (((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP))))
     {
-        (*speedX)+=0.45;
+        (*speedX)+=0.25;
         speedY = speed(*speedX);
-    } else if ((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP))&&(*speedX)>=20)
+    } 
+    
+    if (((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP)))&&(*speedX)>=30)
     {
         if (!((*speedX) < 0))  
         {
-            *speedX -= 0.75;
+            (*speedX) = 30;
         }
     
     }
 
-    if (IsKeyDown(KEY_RIGHT))
+    if (!((globalEntityList[entityId].position.x > screenWidth+15)||(globalEntityList[entityId].position.x < -15)||(globalEntityList[entityId].position.y > screenHeight+15)||(globalEntityList[entityId].position.y < -50)))
     {
-        globalEntityList[entityId].position.x += GetFrameTime()*speedY;
-    } else if (IsKeyDown(KEY_LEFT))
-    {
-        globalEntityList[entityId].position.x -=  GetFrameTime()*speedY;
-    } else if (IsKeyDown(KEY_UP))
-    {
-        globalEntityList[entityId].position.y -= GetFrameTime()*speedY;
-    } else if (IsKeyDown(KEY_DOWN))
-    {
-        globalEntityList[entityId].position.y +=  GetFrameTime()*speedY;
+        if (IsKeyDown(KEY_RIGHT))
+        {
+            globalEntityList[entityId].position.x += GetFrameTime()*speedY;
+        } else if (IsKeyDown(KEY_LEFT))
+        {
+            globalEntityList[entityId].position.x -=  GetFrameTime()*speedY;
+        } else if (IsKeyDown(KEY_UP))
+        {
+            globalEntityList[entityId].position.y -= GetFrameTime()*speedY;
+        } else if (IsKeyDown(KEY_DOWN))
+        {
+            globalEntityList[entityId].position.y +=  GetFrameTime()*speedY;
+        } else 
+        {
+            if (!((*speedX) <= 0))  
+            {
+                *speedX -= 0.85;
+            }
+        }
+
     } else 
     {
-        if (!((*speedX) < 0))  
-        {
-            *speedX -= 0.75;
-        }
+        // gameover
     }
 
    
 }
 
 
-void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, int *gravityAcceleration)
+void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, float *gravityAcceleration)
 {
     
 
@@ -249,9 +262,10 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
 
     for (int i = 1; i < entityCounter; i++)
     {
-        if ((globalEntityList[i].type.type == 2) && ((abs(playerX - globalEntityList[i].position.x) <= globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].position.y) <= globalEntityList[i].collision.circleRadius)))
+        if ((globalEntityList[i].type.type == 2) && ((*gravityAcceleration) < 20) && ((abs(playerX - globalEntityList[i].position.x) <= globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].position.y) <= globalEntityList[i].collision.circleRadius)))
         {
-            (*gravityAcceleration)+=1;
+            globalEntityList[i].collision.circleColor = GREEN;
+            (*gravityAcceleration)+=0.1f;
         }
     }
 
@@ -259,5 +273,10 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
 
 float speed(float x)
 {
-    return (x*x); 
+    if (x <= 2.5){
+        return abs(x*x*x*x); 
+    } else 
+    {
+        return abs(x*x); 
+    }
 }
