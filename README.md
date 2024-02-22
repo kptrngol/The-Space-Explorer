@@ -16,6 +16,9 @@ To do:
 - end game screen
 - play again option
 
+Game screen:
+![Game screen](./assets/screen.png)
+
 Credits:
 
 Dependencies: https://github.com/raysan5/raylib More info: https://www.raylib.com/
