@@ -8,6 +8,8 @@
 int main (void)
 {
     // Declaring and loading textures after window initialisation
+    Music musicTheme;
+    
     Texture2D background;
     Texture2D starship;
     Texture2D meteor20;
@@ -15,7 +17,9 @@ int main (void)
     Texture2D meteor60;
 
     InitWindow(0, 0, "matrixGame");
+    InitAudioDevice();
 
+    musicTheme = LoadMusicStream("./assets/ostheme.mp3");
     background = LoadTexture("./assets/background.png");
     starship = LoadTexture("./assets/starship.png");
     meteor20 = LoadTexture("./assets/meteor.png");
@@ -44,12 +48,14 @@ int main (void)
     SyPositionSingleEntity(globalEntityList,0,1,screenHeight/2);
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     
+    PlayMusicStream(musicTheme);
     SetTargetFPS(60);
     ToggleFullscreen();
 
     while (!WindowShouldClose())
     {
         if (!gameLost) {
+            UpdateMusicStream(musicTheme);
             scrollingBack -= 20.5f;
             if (abs(scrollingBack) >= background.width*6) { scrollingBack = 0.0f;}
             SyMoveSingleEntity(globalEntityList,0,&speedX, screenWidth, screenHeight);
@@ -83,7 +89,7 @@ int main (void)
     } 
 
     // Unload textures
-
+    UnloadMusicStream(musicTheme);
     UnloadTexture(background);
     UnloadTexture(starship);
     UnloadTexture(meteor20);
@@ -91,6 +97,7 @@ int main (void)
     UnloadTexture(meteor60);
 
 
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }

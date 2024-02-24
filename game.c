@@ -275,7 +275,8 @@ float speed(float x)
 {
     if (x <= 2.5){
         return abs(x*x*x*x); 
-    } else 
+    }
+     else 
     {
         return abs(x*x); 
     }
