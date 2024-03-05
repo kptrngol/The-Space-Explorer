@@ -48,31 +48,42 @@ int main (void)
     SyPositionSingleEntity(globalEntityList,0,1,screenHeight/2);
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     
-    PlayMusicStream(musicTheme);
+    // PlayMusicStream(musicTheme);
     SetTargetFPS(60);
     ToggleFullscreen();
 
     while (!WindowShouldClose())
     {
-        if (!gameLost) {
-            UpdateMusicStream(musicTheme);
+        if ((!gameLost)) {
+            // UpdateMusicStream(musicTheme);
+            spacePoitns++;
             scrollingBack -= 20.5f;
+
             if (abs(scrollingBack) >= background.width*6) { scrollingBack = 0.0f;}
+
+            // Update objects position
             SyMoveSingleEntity(globalEntityList,0,&speedX, screenWidth, screenHeight);
             SyGravity(globalEntityList,entitiesNumber, gravityAcceleration);
-            SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,100);
+            SyUpdateTextureCenter(globalEntityList,entitiesNumber);
+
+            // Detect Collision 
+            SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,(113/2), &gameLost, 65, 65);
             SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
             
             BeginDrawing();
 
                 ClearBackground(BLACK);
+
+                // Draw background
                 DrawTextureEx(background,(Vector2){scrollingBack,0}, 0.0f, 6.0f,WHITE);
                 DrawTextureEx(background,(Vector2){scrollingBack + background.width*6,0}, 0.0f, 6.0f,WHITE);
-                DrawText(TextFormat("scroll: %f", scrollingBack), 0, 20, 20, RED);
-                DrawText(TextFormat("gravityAcceleration: %f", gravityAcceleration), 0, 40, 20, RED);
-                DrawText(TextFormat("speed: %f", speedX), 0, 60, 20, RED);
+                DrawText(TextFormat("SPACE POINTS: %d", spacePoitns), 0, 20, 20, WHITE);
+                DrawText(TextFormat("ACCELERATION: %f", gravityAcceleration), 0, 40, 20, WHITE);
+                
+                // Render
 
                 SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
+                DrawCircleLines(globalEntityList[0].position.x+(65/2), globalEntityList[0].position.y+(65/2),30, YELLOW);
                 SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
                 SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, globalTextureList,2);
 
@@ -82,9 +93,11 @@ int main (void)
         } else 
         {
             BeginDrawing();
-            ClearBackground(BLACK);
-            DrawText("GAME OVER", 0, 0, 20, RED);
+                ClearBackground(BLACK);
+                DrawText("GAME OVER", screenWidth/2-(MeasureText("GAME OVER",100)/2), screenHeight/2-50, 100, RED);
+                DrawText(TextFormat("SCORE: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("SCORE: %d", spacePoitns),32)/2), screenHeight/2 + 50, 32, WHITE);
 
+            EndDrawing();
         }
     } 
 

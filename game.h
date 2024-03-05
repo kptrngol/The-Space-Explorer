@@ -14,6 +14,8 @@ typedef struct CoCollision
 {
     int status;
     int circle;
+    int centerX;
+    int centerY;
     Color circleColor;
     int circleRadius;
 }CoCollision;
@@ -47,8 +49,9 @@ typedef struct EnEntity
 
 
 // Declare variables
+// Main dynamic game variables
 extern int gameLost;
-
+extern int spacePoitns;
 extern float gravityAcceleration;
 
 extern int SyLoadEntitiesCounter;
@@ -81,9 +84,10 @@ void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenC
 void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX, int screenWidth, int screenHeight);
 void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int specialEntityCounter, int type, Texture2D *texture, int textureNumber);
 void SyGravity(EnEntity *globalEntityList, int entityCounter, float gravityAcceleration);
+void SyUpdateTextureCenter(EnEntity *globalEntityList, int entityCounter);
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight);
 // void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);
-void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius);
+void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius, int *gameLost, int playerTextureWidth, int playerTextureHeight);
 void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, float *gravityAcceleration);
 
 float speed(float x);

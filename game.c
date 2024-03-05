@@ -5,10 +5,15 @@
 #include "game.h"
 
 // Variables definition
-int gameLost = 0;
 
+// Main dynamic game variables
+int gameLost = 0;
+int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
 
+
+
+// game object variables
 
 int SyLoadEntitiesCounter;
 int specialEntityFirstId;
@@ -35,7 +40,6 @@ float speedY = 0.0f;
 float scrollingBack = 0.0f;
 
 // Functions initialization
-
 
 int entitiesNumber = 0;
 int SyLoadEntities(EnEntity *source, int sourceSize, EnEntity *target, int targetSize, int *lastElementCounter)
@@ -79,6 +83,8 @@ void SyInitializeEntity(EnEntity *globalEntityList, int entityCounter, int scree
         globalEntityList[i].position.status = 1;
         globalEntityList[i].position.x = x;
         globalEntityList[i].position.y = y;
+        globalEntityList[i].collision.centerX = x + (113/2);
+        globalEntityList[i].collision.centerY = y + (113/2);
     }
 
 }
@@ -116,6 +122,18 @@ void SyGravity(EnEntity *globalEntityList, int entityCounter, float gravityAccel
     for (int i = 1; i <= entityCounter;i++)
     {
         globalEntityList[i].position.x -= gravityAcceleration;
+        
+    }
+}
+
+void SyUpdateTextureCenter(EnEntity *globalEntityList, int entityCounter)
+{
+
+    for (int i = 1; i <= entityCounter;i++)
+    {
+        globalEntityList[i].collision.centerX = globalEntityList[i].position.x + (113/2);
+        globalEntityList[i].collision.centerY = globalEntityList[i].position.y + (113/2);
+        
     }
 
 }
@@ -135,6 +153,8 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
 
             globalEntityList[i].position.x = screenWidth;
             globalEntityList[i].position.y = y;
+            globalEntityList[i].collision.centerX = screenWidth + (113/2);
+            globalEntityList[i].collision.centerY = y + (113/2);
             
             switch(globalEntityList[i].type.type)
             {
@@ -161,27 +181,33 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
     for (int i = specialEntityFirstId; i < specialEntityFirstId+specialEntityCounter; i++)
     {
         DrawTexture(texture[textureNumber],globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
+        if (globalEntityList[i].type.type != 0) 
+        {
+            DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 50, WHITE);
+        }
         if (globalEntityList[i].type.type == 2) 
         {
-            DrawCircleLines(globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].collision.circleRadius, globalEntityList[i].collision.circleColor);
+            DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, globalEntityList[i].collision.circleRadius, globalEntityList[i].collision.circleColor);
         }
     }
 }
 
-void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius)
+void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius, int *gameLost, int playerTextureWidth, int playerTextureHeight)
 {
 
-    // Collecting player position
+    // Collecting player position 
+    
+    // Setting up the central point of the player texture as a reference point for collision - using full texture diameter as we need to flag collision when circle lines overlay 
 
-    int playerX = globalEntityList[0].position.x;
-    int playerY = globalEntityList[0].position.y;
+    int playerX = globalEntityList[0].position.x + (playerTextureWidth/2);
+    int playerY = globalEntityList[0].position.y + (playerTextureHeight/2);
 
     for (int i = 1; i < entityCounter; i++)
     {
 
-        if ((abs(playerX - globalEntityList[i].position.x) < radius) && (abs(playerY - globalEntityList[i].position.y) < radius))
+        if ((abs(playerX - globalEntityList[i].collision.centerX) < radius) && (abs(playerY - globalEntityList[i].collision.centerY) < radius))
         {
-            // SyEndGame()
+            *gameLost = 1;
             globalEntityList[i].collision.status = 1;
             globalEntityList[i].color = BLACK;
         }
@@ -257,12 +283,12 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
 {
     
 
-    int playerX = globalEntityList[0].position.x;
-    int playerY = globalEntityList[0].position.y;
+    int playerX = globalEntityList[0].position.x + 65/2;
+    int playerY = globalEntityList[0].position.y + 65/2;
 
     for (int i = 1; i < entityCounter; i++)
     {
-        if ((globalEntityList[i].type.type == 2) && ((*gravityAcceleration) < 20) && ((abs(playerX - globalEntityList[i].position.x) <= globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].position.y) <= globalEntityList[i].collision.circleRadius)))
+        if ((globalEntityList[i].type.type == 2) && ((*gravityAcceleration) < 20) && ((abs(playerX - globalEntityList[i].collision.centerX) <= globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].collision.centerX) <= globalEntityList[i].collision.circleRadius)))
         {
             globalEntityList[i].collision.circleColor = GREEN;
             (*gravityAcceleration)+=0.1f;
