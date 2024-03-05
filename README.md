@@ -7,18 +7,22 @@ This exercise was focused on:
 - first ECS-like system implementation
 
 To do:
-
-- texture randomizer (rotation, size)
-- story dialog box module
-- menu module and play again  
-- distance dashboard
-- save game data (score)
 - instalation package for linux
-- adding soundtrack
+- menu module and play again
+- fix respawn bug
+- multiple life points
+- fix borders sticking issue/figure out something better
 
 optionally: 
-
+- figure out some story/more interesting goal for players
+- diagonal movement
+- see the ship damage after loosing life point
+- space key directional boost
 - better textures 
+- texture randomizer (rotation, size)
+- story dialog box module
+- save game data (score)
+- adding soundtrack
 
 ![gameplay](./assets/screen.gif)
 

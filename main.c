@@ -48,14 +48,14 @@ int main (void)
     SyPositionSingleEntity(globalEntityList,0,1,screenHeight/2);
     SyColorSingleEntity(globalEntityList, 0, RAYWHITE);
     
-    // PlayMusicStream(musicTheme);
+    PlayMusicStream(musicTheme);
     SetTargetFPS(60);
     ToggleFullscreen();
 
     while (!WindowShouldClose())
     {
         if ((!gameLost)) {
-            // UpdateMusicStream(musicTheme);
+            UpdateMusicStream(musicTheme);
             spacePoitns++;
             scrollingBack -= 20.5f;
 
@@ -67,7 +67,7 @@ int main (void)
             SyUpdateTextureCenter(globalEntityList,entitiesNumber);
 
             // Detect Collision 
-            SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,(113/2), &gameLost, 65, 65);
+            SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,(113), &gameLost, 65, 65);
             SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
             
             BeginDrawing();
@@ -79,6 +79,7 @@ int main (void)
                 DrawTextureEx(background,(Vector2){scrollingBack + background.width*6,0}, 0.0f, 6.0f,WHITE);
                 DrawText(TextFormat("SPACE POINTS: %d", spacePoitns), 0, 20, 20, WHITE);
                 DrawText(TextFormat("ACCELERATION: %f", gravityAcceleration), 0, 40, 20, WHITE);
+                DrawText(TextFormat("FPS: %d", GetFPS()), 0, 60, 20, GREEN);
                 
                 // Render
 
@@ -92,10 +93,13 @@ int main (void)
             SyResetPosition(globalEntityList,entitiesNumber, screenWidth, screenHeight);
         } else 
         {
+            UpdateMusicStream(musicTheme);
             BeginDrawing();
                 ClearBackground(BLACK);
                 DrawText("GAME OVER", screenWidth/2-(MeasureText("GAME OVER",100)/2), screenHeight/2-50, 100, RED);
                 DrawText(TextFormat("SCORE: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("SCORE: %d", spacePoitns),32)/2), screenHeight/2 + 50, 32, WHITE);
+                DrawText("Game: Konrad Petrenko-Goljanek", screenWidth/2-(MeasureText("Game: Konrad Petrenko-Goljanek",16)/2), screenHeight/2 + 150, 16, PURPLE);
+                DrawText("Music: Mateusz Kurek", screenWidth/2-(MeasureText("Music: Mateusz Kurek",16)/2), screenHeight/2 + 200, 16, PURPLE);
 
             EndDrawing();
         }

@@ -183,7 +183,7 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
         if (globalEntityList[i].type.type != 0) 
         {
 
-            DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 50, WHITE);
+            DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 113/2, WHITE);
         }
         if (globalEntityList[i].type.type == 2) 
         {
@@ -215,9 +215,11 @@ void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEnt
 
         if (entitiesHyp<=(globalEntityList[i].collision.circleRadius+playerHyp))
         {
-
-            // *gameLost = 1;
-            globalEntityList[i].collision.status = 1;
+            if (globalEntityList[i].type.type != 2)
+            {
+                *gameLost = 1;
+            }
+            // globalEntityList[i].collision.status = 1;
             globalEntityList[i].color = BLACK;
         }
     }
@@ -273,7 +275,7 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX,
             globalEntityList[entityId].position.y +=  GetFrameTime()*speedY;
         } else 
         {
-            if (!((*speedX) <= 0))  
+            if (!((*speedX) <= 10))  
             {
                 *speedX -= 0.85;
             }
@@ -322,10 +324,10 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
 float speed(float x)
 {
     if (x <= 2.5){
-        return abs(x*x*x*x); 
+        return abs((x*x*x*x)*2); 
     }
      else 
     {
-        return abs(x*x); 
+        return abs((x*x)/1.5); 
     }
 }
