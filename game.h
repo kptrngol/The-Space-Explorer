@@ -3,6 +3,13 @@
 
 // Declare components
 
+typedef enum State
+{
+    MENU,
+    GAME
+}state;
+
+
 typedef struct CoPosition
 {
     int status;
@@ -50,6 +57,8 @@ typedef struct EnEntity
 
 // Declare variables
 // Main dynamic game variables
+extern int exitGame;
+extern state gameState;
 extern int gameLost;
 extern int spacePoitns;
 extern float gravityAcceleration;

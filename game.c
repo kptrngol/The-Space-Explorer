@@ -7,6 +7,9 @@
 // Variables definition
 
 // Main dynamic game variables
+int exitGame = 0;
+// state gameState = MENU;
+state gameState = GAME;
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
