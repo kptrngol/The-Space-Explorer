@@ -1,17 +1,15 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 #include "game.h"
-
 // Variables definition
 
 // Main dynamic game variables
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
-
-
 
 // game object variables
 
@@ -103,6 +101,7 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int specialEntityFir
         {
             globalEntityList[i].type.type = 1;
             globalEntityList[i].color = RED;
+            globalEntityList[i].collision.circleRadius = 50;   
 
         } else if (type == 2)
         {
@@ -183,6 +182,7 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
         DrawTexture(texture[textureNumber],globalEntityList[i].position.x, globalEntityList[i].position.y, globalEntityList[i].color);
         if (globalEntityList[i].type.type != 0) 
         {
+
             DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 50, WHITE);
         }
         if (globalEntityList[i].type.type == 2) 
@@ -205,9 +205,18 @@ void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEnt
     for (int i = 1; i < entityCounter; i++)
     {
 
-        if ((abs(playerX - globalEntityList[i].collision.centerX) < radius) && (abs(playerY - globalEntityList[i].collision.centerY) < radius))
+        // calculate collision triangle hypotenuse
+        int dxSq = pow((abs(playerX - globalEntityList[i].collision.centerX)),2);
+        int dySq = pow((abs(playerY - globalEntityList[i].collision.centerY)),2);            
+        int entitiesHyp = sqrt(dxSq+dySq);
+
+        // calculate player ship collision circle radius
+        int playerHyp = sqrt(pow(65/2,2)+pow(65/2,2));
+
+        if (entitiesHyp<=(globalEntityList[i].collision.circleRadius+playerHyp))
         {
-            *gameLost = 1;
+
+            // *gameLost = 1;
             globalEntityList[i].collision.status = 1;
             globalEntityList[i].color = BLACK;
         }
@@ -286,12 +295,25 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
     int playerX = globalEntityList[0].position.x + 65/2;
     int playerY = globalEntityList[0].position.y + 65/2;
 
+
     for (int i = 1; i < entityCounter; i++)
     {
-        if ((globalEntityList[i].type.type == 2) && ((*gravityAcceleration) < 20) && ((abs(playerX - globalEntityList[i].collision.centerX) <= globalEntityList[i].collision.circleRadius) && (abs(playerY - globalEntityList[i].collision.centerX) <= globalEntityList[i].collision.circleRadius)))
+        if ((globalEntityList[i].type.type == 2) && ((*gravityAcceleration) < 20))
         {
-            globalEntityList[i].collision.circleColor = GREEN;
-            (*gravityAcceleration)+=0.1f;
+            // calculate collision triangle hypotenuse
+            int dxSq = pow((abs(playerX - globalEntityList[i].collision.centerX)),2);
+            int dySq = pow((abs(playerY - globalEntityList[i].collision.centerY)),2);            
+            int entitiesHyp = sqrt(dxSq+dySq);
+
+            // calculate player ship collision circle radius
+            int playerHyp = sqrt(pow(65/2,2)+pow(65/2,2));
+
+            if (entitiesHyp<=(globalEntityList[i].collision.circleRadius+playerHyp))
+            {
+                globalEntityList[i].collision.circleColor = GREEN;
+                (*gravityAcceleration)+=0.1f;
+
+            }
         }
     }
 
