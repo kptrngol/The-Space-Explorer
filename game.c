@@ -8,8 +8,8 @@
 
 // Main dynamic game variables
 int exitGame = 0;
-// state gameState = MENU;
-state gameState = GAME;
+state gameState = MENU;
+// state gameState = GAME;
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
@@ -146,6 +146,7 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
         int y,ymin,ymax;
         ymin = 0;
         ymax = screenHeight;
+
         
     for (int i = 1; i <= entityCounter; i++)
     {

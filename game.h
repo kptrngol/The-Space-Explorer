@@ -6,7 +6,8 @@
 typedef enum State
 {
     MENU,
-    GAME
+    GAME,
+    GAMEOVER
 }state;
 
 

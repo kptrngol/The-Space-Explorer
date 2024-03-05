@@ -62,15 +62,48 @@ int main (void)
                     if (!(IsKeyPressed(KEY_ESCAPE)))
                     {
                         UpdateMusicStream(musicTheme);
+
+                        if (IsKeyPressed(KEY_ENTER))
+                        {
+                            gameState = GAME;
+                        }
+
                         BeginDrawing();
                             ClearBackground(BLACK);
-                            DrawText("GAME OVER", screenWidth/2-(MeasureText("GAME OVER",100)/2), screenHeight/2-50, 100, RED);
+                            DrawText("SPACE EXPLORER", screenWidth/2-(MeasureText("SPACE EXPLORER",200)/2), screenHeight/2-50, 200, RED);
+                            // DrawRectangle(int posX, int posY, int width, int height, Color color);                            
+                            DrawText("Hit ENTER to play game", screenWidth/2-(MeasureText("Hit ENTER to play game",32)/2), screenHeight/2 + 100, 32, WHITE);
+                        EndDrawing();
+                    } else {
+                        exitGame = 1;
+                        // CloseWindow();
+                    }
+                    break;
+                
+                case GAMEOVER:
+                    if ((!(IsKeyPressed(KEY_ESCAPE))))
+                    {
+                    
+                        UpdateMusicStream(musicTheme);
+
+                        BeginDrawing();
+                            ClearBackground(BLACK);
+
+                            // if (IsKeyPressed(KEY_ENTER))
+                            // {
+                            //     gameState = GAME;
+                            //     gameLost = 0;
+                            //     INITIALIZE DEFAULT GAME SETTINGS
+                            // }
+                            DrawText("GAME OVER", screenWidth/2-(MeasureText("GAME OVER",100)/2), screenHeight/2-50, 100, RED);                            
                             DrawText(TextFormat("SCORE: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("SCORE: %d", spacePoitns),32)/2), screenHeight/2 + 50, 32, WHITE);
                             DrawText("Game: Konrad Petrenko-Goljanek", screenWidth/2-(MeasureText("Game: Konrad Petrenko-Goljanek",16)/2), screenHeight/2 + 150, 16, PURPLE);
                             DrawText("Music: Mateusz Kurek", screenWidth/2-(MeasureText("Music: Mateusz Kurek",16)/2), screenHeight/2 + 200, 16, PURPLE);
+                        
                         EndDrawing();
                     } else {
-                        CloseWindow();
+                        exitGame = 1;
+                        // CloseWindow();
                     }
                     break;
 
@@ -115,7 +148,7 @@ int main (void)
                         SyResetPosition(globalEntityList,entitiesNumber, screenWidth, screenHeight);
                     } else 
                     {
-                        gameState = MENU;
+                        gameState = GAMEOVER;
                     }
                     break;
             }

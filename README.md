@@ -8,8 +8,8 @@ This exercise was focused on:
 
 To do:
 - instalation package for linux
-- menu module and play again
-- fix respawn bug
+- menu module and play again - function that initializes default game settings
+- fix multiple respawn bug
 - multiple life points
 - fix borders sticking issue/figure out something better
 
@@ -22,7 +22,6 @@ optionally:
 - texture randomizer (rotation, size)
 - story dialog box module
 - save game data (score)
-- adding soundtrack
 
 ![gameplay](./assets/screen.gif)
 
