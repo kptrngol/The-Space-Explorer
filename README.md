@@ -1,6 +1,9 @@
-#The Space Explorer
+#the lone space
 
-The Space Explorer is a simple Raylib based game. The project was started with an aim to learn the basics of the Raylib library and game programming.
+In search of valuable deposits, Joseph is forced to engage in a solitary dance amidst a ring of ice and rocks. His endless solitude is interrupted by a mysterious noise coming from the unilluminated side of the orbit.
+
+The lone space is a simple Raylib based game. The project was started with an aim to learn the basics of the Raylib library and game programming.
+
 
 This exercise was focused on: 
 
@@ -12,9 +15,15 @@ To do:
 - fix multiple respawn bug
 - multiple life points
 - fix borders sticking issue/figure out something better
+- Adding large rocks to create the scale effect
+- adding front layer of background that makes steering harder as we cannot see some obstacles, additionally it creates an effect of stalking Joseph's ship
 
 optionally: 
-- figure out some story/more interesting goal for players
+
+- use the side of starship as a texture
+- when travelling up textures should react
+- present textures from the side perspective
+
 - diagonal movement
 - see the ship damage after loosing life point
 - space key directional boost
@@ -22,6 +31,9 @@ optionally:
 - texture randomizer (rotation, size)
 - story dialog box module
 - save game data (score)
+- new types of objects (landing on object to extract resources)
+
+spoiler: there is nothing more on the other side, just more endless longing 
 
 ![gameplay](./assets/screen.gif)
 

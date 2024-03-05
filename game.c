@@ -317,7 +317,7 @@ void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int 
             if (entitiesHyp<=(globalEntityList[i].collision.circleRadius+playerHyp))
             {
                 globalEntityList[i].collision.circleColor = GREEN;
-                (*gravityAcceleration)+=0.1f;
+                (*gravityAcceleration)+=0.005f;
 
             }
         }

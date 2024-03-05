@@ -16,10 +16,10 @@ int main (void)
     Texture2D meteor30;
     Texture2D meteor60;
 
-    InitWindow(0, 0, "matrixGame");
+    InitWindow(0, 0, "the lone space");
     InitAudioDevice();
 
-    musicTheme = LoadMusicStream("./assets/ostheme.mp3");
+    musicTheme = LoadMusicStream("./assets/dust.mp3");
     background = LoadTexture("./assets/background.png");
     starship = LoadTexture("./assets/starship.png");
     meteor20 = LoadTexture("./assets/meteor.png");
@@ -70,9 +70,9 @@ int main (void)
 
                         BeginDrawing();
                             ClearBackground(BLACK);
-                            DrawText("SPACE EXPLORER", screenWidth/2-(MeasureText("SPACE EXPLORER",200)/2), screenHeight/2-50, 200, RED);
+                            DrawText("the lone space", screenWidth/2-(MeasureText("the lone space",32)/2), screenHeight/2, 32, GRAY);
                             // DrawRectangle(int posX, int posY, int width, int height, Color color);                            
-                            DrawText("Hit ENTER to play game", screenWidth/2-(MeasureText("Hit ENTER to play game",32)/2), screenHeight/2 + 100, 32, WHITE);
+                            DrawText("enter the shuttle", screenWidth/2-(MeasureText("enter the shuttle",16)/2), screenHeight/2 + 32, 16, WHITE);
                         EndDrawing();
                     } else {
                         exitGame = 1;
@@ -95,10 +95,10 @@ int main (void)
                             //     gameLost = 0;
                             //     INITIALIZE DEFAULT GAME SETTINGS
                             // }
-                            DrawText("GAME OVER", screenWidth/2-(MeasureText("GAME OVER",100)/2), screenHeight/2-50, 100, RED);                            
-                            DrawText(TextFormat("SCORE: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("SCORE: %d", spacePoitns),32)/2), screenHeight/2 + 50, 32, WHITE);
-                            DrawText("Game: Konrad Petrenko-Goljanek", screenWidth/2-(MeasureText("Game: Konrad Petrenko-Goljanek",16)/2), screenHeight/2 + 150, 16, PURPLE);
-                            DrawText("Music: Mateusz Kurek", screenWidth/2-(MeasureText("Music: Mateusz Kurek",16)/2), screenHeight/2 + 200, 16, PURPLE);
+                            DrawText("signal lost", screenWidth/2-(MeasureText("signal lost",32)/2), screenHeight/2, 32, RED);                            
+                            DrawText(TextFormat("distance: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("distance: %d", spacePoitns),16)/2), screenHeight/2 + 32, 16, WHITE);
+                            // DrawText("game: konrad petrenko-goljanek", screenWidth/2-(MeasureText("game: konrad petrenko-goljanek",16)/2), screenHeight/2 + 150, 16, PURPLE);
+                            // DrawText("music: mateusz kurek", screenWidth/2-(MeasureText("music: mateusz kurek",16)/2), screenHeight/2 + 200, 16, PURPLE);
                         
                         EndDrawing();
                     } else {
@@ -112,7 +112,7 @@ int main (void)
                     {
                         UpdateMusicStream(musicTheme);
                         spacePoitns++;
-                        scrollingBack -= 20.5f;
+                        scrollingBack -= 10.5f;
 
                         if (abs(scrollingBack) >= background.width*6) { scrollingBack = 0.0f;}
 
@@ -132,9 +132,9 @@ int main (void)
                             // Draw background
                             DrawTextureEx(background,(Vector2){scrollingBack,0}, 0.0f, 6.0f,WHITE);
                             DrawTextureEx(background,(Vector2){scrollingBack + background.width*6,0}, 0.0f, 6.0f,WHITE);
-                            DrawText(TextFormat("SPACE POINTS: %d", spacePoitns), 0, 20, 20, WHITE);
-                            DrawText(TextFormat("ACCELERATION: %f", gravityAcceleration), 0, 40, 20, WHITE);
-                            DrawText(TextFormat("FPS: %d", GetFPS()), 0, 60, 20, GREEN);
+                            DrawText(TextFormat("distance: %d", spacePoitns), 10, 20, 16, WHITE);
+                            DrawText(TextFormat("acceleration: %f", gravityAcceleration), 10, 40, 16, WHITE);
+                            DrawText(TextFormat("fps: %d", GetFPS()), 10, 60, 16, GRAY);
                             
                             // Render
 
