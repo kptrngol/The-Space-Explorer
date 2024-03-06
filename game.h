@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define COOLDOWNTIME 1
+
 // Declare components
 
 typedef enum State
@@ -63,6 +65,8 @@ extern state gameState;
 extern int gameLost;
 extern int spacePoitns;
 extern float gravityAcceleration;
+extern int collisionCooldownStatus;
+extern float collisionCooldownTimer;
 
 extern int SyLoadEntitiesCounter;
 extern int specialEntityFirstId;
@@ -98,6 +102,7 @@ void SyUpdateTextureCenter(EnEntity *globalEntityList, int entityCounter);
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight);
 // void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);
 void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius, int *gameLost, int playerTextureWidth, int playerTextureHeight);
+void SyCooldownUpdate();
 void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, float *gravityAcceleration);
 
 float speed(float x);

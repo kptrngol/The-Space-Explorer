@@ -70,9 +70,10 @@ int main (void)
 
                         BeginDrawing();
                             ClearBackground(BLACK);
-                            DrawText("the lone space", screenWidth/2-(MeasureText("the lone space",32)/2), screenHeight/2, 32, GRAY);
+                            DrawText("the lone space", screenWidth/2-(MeasureText("the lone space",32)/2), screenHeight/2, 32, DARKGRAY);
                             // DrawRectangle(int posX, int posY, int width, int height, Color color);                            
-                            DrawText("enter the shuttle", screenWidth/2-(MeasureText("enter the shuttle",16)/2), screenHeight/2 + 32, 16, WHITE);
+                            DrawText("enter* the shuttle", screenWidth/2-(MeasureText("enter the shuttle",16)/2), screenHeight/2 + 32, 16, WHITE);
+                            DrawText("escape* the shuttle", screenWidth/2-(MeasureText("escape the shuttle",16)/2), screenHeight/2 + 48, 16, GRAY);
                         EndDrawing();
                     } else {
                         exitGame = 1;
@@ -108,8 +109,14 @@ int main (void)
                     break;
 
                 case GAME:
-                    if ((!gameLost)) 
+                    if ((!(gameLost>=3))) 
                     {
+
+                        if (IsKeyPressed(KEY_ESCAPE))
+                        {
+                            gameState = MENU;
+                        }
+
                         UpdateMusicStream(musicTheme);
                         spacePoitns++;
                         scrollingBack -= 10.5f;
@@ -124,6 +131,7 @@ int main (void)
                         // Detect Collision 
                         SyDetectPlayerCollision(globalEntityList,globalEntityList,entitiesNumber,(113), &gameLost, 65, 65);
                         SyDetectCircleCollision(globalEntityList, entitiesNumber,200, &gravityAcceleration);
+                        SyCooldownUpdate();
                         
                         BeginDrawing();
 
@@ -132,10 +140,17 @@ int main (void)
                             // Draw background
                             DrawTextureEx(background,(Vector2){scrollingBack,0}, 0.0f, 6.0f,WHITE);
                             DrawTextureEx(background,(Vector2){scrollingBack + background.width*6,0}, 0.0f, 6.0f,WHITE);
+
+                            // Progress info
                             DrawText(TextFormat("distance: %d", spacePoitns), 10, 20, 16, WHITE);
                             DrawText(TextFormat("acceleration: %f", gravityAcceleration), 10, 40, 16, WHITE);
-                            DrawText(TextFormat("fps: %d", GetFPS()), 10, 60, 16, GRAY);
-                            
+                            DrawText(TextFormat("shuttle damage: %d/3", gameLost), 10, 60, 16, RED);
+
+                            // Debug info
+                            DrawText(TextFormat("fps: %d", GetFPS()), screenWidth-(MeasureText("fps",16))-80, 20, 16, GRAY);
+                            DrawText(TextFormat("cooldown: %f", collisionCooldownTimer), screenWidth-(MeasureText("cooldown",16))-80, 40, 16, GRAY);
+                            DrawText(TextFormat("cooldown st.: %d", collisionCooldownStatus), screenWidth-(MeasureText("cooldown st.",16))-80, 60, 16, GRAY);
+
                             // Render
 
                             SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);

@@ -13,6 +13,10 @@ state gameState = MENU;
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
+int collisionCooldownStatus = 0;
+float collisionCooldownTimer = 0.0f;
+
+
 
 // game object variables
 
@@ -198,8 +202,6 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
 
 void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius, int *gameLost, int playerTextureWidth, int playerTextureHeight)
 {
-
-    // Collecting player position 
     
     // Setting up the central point of the player texture as a reference point for collision - using full texture diameter as we need to flag collision when circle lines overlay 
 
@@ -219,16 +221,26 @@ void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEnt
 
         if (entitiesHyp<=(globalEntityList[i].collision.circleRadius+playerHyp))
         {
-            if (globalEntityList[i].type.type != 2)
+            if (globalEntityList[i].type.type != 2 && (!collisionCooldownStatus))
             {
-                *gameLost = 1;
+                collisionCooldownStatus = 1;
+                collisionCooldownTimer = 0;
+                (*gameLost)++;
             }
-            // globalEntityList[i].collision.status = 1;
-            globalEntityList[i].color = BLACK;
         }
     }
 }
 
+void SyCooldownUpdate()
+{
+    if(collisionCooldownTimer < COOLDOWNTIME)
+    {
+        collisionCooldownTimer += GetFrameTime();
+    } else
+    {
+        collisionCooldownStatus = 0;
+    }
+}
 // Single entity tools (color, position, assign controls)
 
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor)

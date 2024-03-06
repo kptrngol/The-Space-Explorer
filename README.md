@@ -7,9 +7,10 @@ The lone space is a simple Raylib based game. The project was started with an ai
 
 This exercise was focused on: 
 
-- first ECS-like system implementation
+- my first ECS-like system implementation
 
 To do:
+- invulnerability cooldown after taking the damage 
 - instalation package for linux
 - menu module and play again - function that initializes default game settings
 - fix multiple respawn bug
@@ -32,6 +33,10 @@ optionally:
 - story dialog box module
 - save game data (score)
 - new types of objects (landing on object to extract resources)
+
+Script:
+
+
 
 spoiler: there is nothing more on the other side, just more endless longing 
 
