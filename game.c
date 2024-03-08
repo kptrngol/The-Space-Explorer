@@ -9,14 +9,17 @@
 // Main dynamic game variables
 int exitGame = 0;
 state gameState = MENU;
-// state gameState = GAME;
+
+// Initialize main variables
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
 int collisionCooldownStatus = 0;
 float collisionCooldownTimer = 0.0f;
-
-
+int boostCooldownStatus = 0;
+float boostCooldownTimer = 0.0f;
+int boostStatus = 0;
+float boostTimer = 0.0f;
 
 // game object variables
 
@@ -27,11 +30,11 @@ EnEntity player[1];
 int playerAmount = 1;
 int playerId;
 
-EnEntity redMeteors[25];
+EnEntity redMeteors[10];
 int redMeteorsAmount = sizeof(redMeteors)/sizeof(redMeteors[0]);
 int redMeteorsId;
 
-EnEntity greenMeteors[3];
+EnEntity greenMeteors[2];
 int greenMeteorsAmount = sizeof(greenMeteors)/sizeof(greenMeteors[0]);
 int greenMeteorsId;
 
@@ -107,13 +110,13 @@ void SyInitializeSpecialEntity (EnEntity *globalEntityList, int specialEntityFir
         else if (type == 1)
         {
             globalEntityList[i].type.type = 1;
-            globalEntityList[i].color = RED;
+            globalEntityList[i].color = WHITE;
             globalEntityList[i].collision.circleRadius = 50;   
 
         } else if (type == 2)
         {
             globalEntityList[i].type.type = 2;
-            globalEntityList[i].color = GREEN;
+            globalEntityList[i].color = WHITE;
             globalEntityList[i].collision.circleRadius = radius;            
             
         }
@@ -154,7 +157,7 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
         
     for (int i = 1; i <= entityCounter; i++)
     {
-        if (globalEntityList[i].position.x <= 0)
+        if (globalEntityList[i].position.x <= -30)
         {
             y = ymin + rand() % (ymax - ymin + 1);
 
@@ -170,10 +173,10 @@ void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWi
                     globalEntityList[i].color = GOLD;
                     break;
                 case 1:
-                    globalEntityList[i].color = RED;
+                    globalEntityList[i].color = WHITE;
                     break;
                 case 2:
-                    globalEntityList[i].color = GREEN;
+                    globalEntityList[i].color = WHITE;
                     globalEntityList[i].collision.circleColor = WHITE;
                     break;
             
@@ -191,7 +194,7 @@ void SyRenderEntity(EnEntity *globalEntityList, int specialEntityFirstId, int sp
         if (globalEntityList[i].type.type != 0) 
         {
 
-            DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 113/2, WHITE);
+            // DrawCircleLines(globalEntityList[i].collision.centerX, globalEntityList[i].collision.centerY, 113/2, WHITE);
         }
         if (globalEntityList[i].type.type == 2) 
         {
@@ -223,24 +226,38 @@ void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEnt
         {
             if (globalEntityList[i].type.type != 2 && (!collisionCooldownStatus))
             {
-                collisionCooldownStatus = 1;
                 collisionCooldownTimer = 0;
+                collisionCooldownStatus = 1;
                 (*gameLost)++;
             }
         }
     }
 }
 
-void SyCooldownUpdate()
+void SyCooldownUpdate(float *cooldownTimer, int *cooldownStatus, int time)
 {
-    if(collisionCooldownTimer < COOLDOWNTIME)
+    if((*cooldownTimer) < time)
     {
-        collisionCooldownTimer += GetFrameTime();
+        (*cooldownTimer) += GetFrameTime();
     } else
     {
-        collisionCooldownStatus = 0;
+        (*cooldownStatus) = 0;
     }
 }
+
+void SyTimerDependantActionUpdate(float *cooldownTimer, int *cooldownStatus, int time, int *secondActionStatus, float *secondActionTimer)
+{
+    if((*cooldownTimer) < time)
+    {
+        (*cooldownTimer) += GetFrameTime();
+    } else
+    {
+        (*secondActionTimer) = 0.0f;
+        (*secondActionStatus) = 1;
+        (*cooldownStatus) = 0;
+    }
+}
+
 // Single entity tools (color, position, assign controls)
 
 void SyColorSingleEntity(EnEntity *globalEntityList, int entityId,Color ChoosenColor)
@@ -260,17 +277,32 @@ void SyPositionSingleEntity(EnEntity *globalEntityList, int entityId, int x, int
 void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX, int screenWidth, int screenHeight) 
 {
     float speedY;
+    float boostModifier;
+    if (IsKeyDown(KEY_SPACE)&&(!boostCooldownStatus)&&(!boostStatus))
+    {
+        boostTimer = 0;
+        boostStatus = 1;
+    }
+    
+    if (boostStatus == 1)
+    {
+        boostModifier = 1.75;
+    } else 
+    {
+        boostModifier = 1;
+    }
+
     if (((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP))))
     {
-        (*speedX)+=0.25;
+        (*speedX)+= 0.25;
         speedY = speed(*speedX);
     } 
     
-    if (((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP)))&&(*speedX)>=30)
+    if (((IsKeyDown(KEY_RIGHT))||(IsKeyDown(KEY_LEFT))||(IsKeyDown(KEY_DOWN))||(IsKeyDown(KEY_UP)))&&(*speedX)>=20)
     {
         if (!((*speedX) < 0))  
         {
-            (*speedX) = 30;
+            (*speedX) = 20;
         }
     
     }
@@ -279,23 +311,25 @@ void SyMoveSingleEntity(EnEntity *globalEntityList, int entityId, float *speedX,
     {
         if (IsKeyDown(KEY_RIGHT))
         {
-            globalEntityList[entityId].position.x += GetFrameTime()*speedY;
+            globalEntityList[entityId].position.x += GetFrameTime()*speedY*boostModifier;
         } else if (IsKeyDown(KEY_LEFT))
         {
-            globalEntityList[entityId].position.x -=  GetFrameTime()*speedY;
+            globalEntityList[entityId].position.x -=  GetFrameTime()*speedY*boostModifier;
         } else if (IsKeyDown(KEY_UP))
         {
-            globalEntityList[entityId].position.y -= GetFrameTime()*speedY;
+            globalEntityList[entityId].position.y -= GetFrameTime()*speedY*boostModifier;
         } else if (IsKeyDown(KEY_DOWN))
         {
-            globalEntityList[entityId].position.y +=  GetFrameTime()*speedY;
+            globalEntityList[entityId].position.y +=  GetFrameTime()*speedY*boostModifier;
         } else 
         {
+            globalEntityList[entityId].position.x -= GetFrameTime()*0.25;
+
             if (!((*speedX) <= 10))  
             {
-                *speedX -= 0.85;
+                *speedX -= 0.875;
             }
-        }
+        } 
 
     } else 
     {

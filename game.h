@@ -2,6 +2,8 @@
 #define GAME_H
 
 #define COOLDOWNTIME 1
+#define BOOSTTIME 1
+#define BOOSTCOOLDOWNTIME 3
 
 // Declare components
 
@@ -67,12 +69,17 @@ extern int spacePoitns;
 extern float gravityAcceleration;
 extern int collisionCooldownStatus;
 extern float collisionCooldownTimer;
+extern int boostCooldownStatus;
+extern float boostCooldownTimer;
+extern int boostStatus;
+extern float boostTimer;
+
 
 extern int SyLoadEntitiesCounter;
 extern int specialEntityFirstId;
 extern EnEntity player[1];
-extern EnEntity redMeteors[25];
-extern EnEntity greenMeteors[3];
+extern EnEntity redMeteors[10];
+extern EnEntity greenMeteors[2];
 extern EnEntity globalEntityList[300];
 extern int playerAmount;
 extern int redMeteorsAmount;
@@ -102,7 +109,8 @@ void SyUpdateTextureCenter(EnEntity *globalEntityList, int entityCounter);
 void SyResetPosition(EnEntity *globalEntityList, int entityCounter, int screenWidth, int screenHeight);
 // void SyResetCollisionStatus(EnEntity *globalEntityList, int entityCounter);
 void SyDetectPlayerCollision(EnEntity *globalEntityList, EnEntity *additionalEntityList, int entityCounter, int radius, int *gameLost, int playerTextureWidth, int playerTextureHeight);
-void SyCooldownUpdate();
+void SyCooldownUpdate(float *cooldownTimer, int *cooldownStatus, int time);
+void SyTimerDependantActionUpdate(float *cooldownTimer, int *cooldownStatus, int time, int *secondActionStatus, float *secondActionTimer);
 void SyDetectCircleCollision(EnEntity *globalEntityList, int entityCounter, int radius, float *gravityAcceleration);
 
 float speed(float x);
