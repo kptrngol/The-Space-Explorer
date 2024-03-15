@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define COOLDOWNTIME 1
+#define COOLDOWNTIME 1.
 #define BOOSTTIME 1
 #define BOOSTCOOLDOWNTIME 3
 
@@ -62,6 +62,8 @@ typedef struct EnEntity
 
 // Declare variables
 // Main dynamic game variables
+
+
 extern int exitGame;
 extern state gameState;
 extern int gameLost;

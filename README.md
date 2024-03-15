@@ -14,8 +14,10 @@ Must:
 
 To be done:
 
-- dynamic memory allocation for number of entities variable
+- events system implementation
 - add dialog window on the bottom with avatar placeholder
+
+- dynamic memory allocation for number of entities variable
 - fix multiple respawn bug
 - fix borders sticking issue/figure out something better
 - water like movement 

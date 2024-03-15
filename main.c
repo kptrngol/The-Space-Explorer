@@ -2,11 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "story.h"
 #include "game.h"
 
 
 int main (void)
 {
+
+
     // Declaring and loading textures after window initialisation
     Music musicTheme;
     
@@ -21,6 +24,8 @@ int main (void)
     InitWindow(0, 0, "the lone space");
     InitAudioDevice();
 
+    const int screenWidth = GetMonitorWidth(0);
+    const int screenHeight = GetMonitorHeight(0);
     musicTheme = LoadMusicStream("./assets/dust.mp3");
     background = LoadTexture("./assets/background.png");
     second_background = LoadTexture("./assets/second_background.png");
@@ -30,9 +35,6 @@ int main (void)
     meteor60 = LoadTexture("./assets/asteroid.png");
 
     Texture2D globalTextureList[10] = {starship, meteor20, meteor30, meteor60};
-
-    const int screenWidth = GetMonitorWidth(0);
-    const int screenHeight = GetMonitorHeight(0);
     
     // Loading entities into one array and saving their ID - array position index
     playerId = SyLoadEntities(player, playerAmount , globalEntityList, 300, &entitiesNumber);
@@ -180,6 +182,9 @@ int main (void)
                             DrawText(TextFormat("boostcooldown st.: %d", boostCooldownStatus), screenWidth-(MeasureText("boostcooldown st.",16))-100, 120, 16, GRAY);
                             DrawText(TextFormat("boost: %f", boostTimer), screenWidth-(MeasureText("boostcooldown",16))-100, 140, 16, GRAY);
                             DrawText(TextFormat("boost st.: %d", boostStatus), screenWidth-(MeasureText("boostcooldown st.",16))-100, 160, 16, GRAY);
+                            
+                            // Game dialog box
+
                             // Render
 
                             SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);

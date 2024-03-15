@@ -11,6 +11,7 @@ int exitGame = 0;
 state gameState = MENU;
 
 // Initialize main variables
+
 int gameLost = 0;
 int spacePoitns = 0;
 float gravityAcceleration = 2.0f;
