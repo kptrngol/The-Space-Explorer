@@ -5,11 +5,11 @@
 #define VERSE_NR 100
 #define VERS_MAX_LENGTH 500
 
-
-// obiekt enum zawierający kolejne etapy gry
+// Determine story phase and aligned dialogues
 
 typedef enum StoryPhase 
 {
+    NONE,
     PROLOGUE,
     ACT1,
     ACT2,
@@ -18,14 +18,17 @@ typedef enum StoryPhase
 }storyPhase;
 
 extern storyPhase currentStoryPhase;
+extern int bookmark; 
+extern float dialogueT;
 
-// funkcja sprawdzająca warunki kolejnych etapów gry w game loopie
+// Change story phases as player progress through map
+void SyStoryPhaseSwitch(storyPhase (*currentStoryPhase),int playerDistance);
 
+
+// Print dialogues
 void SyPrintDialogue(storyPhase (*currentStoryPhase), char dialogueData[PHASE][VERSE_NR][VERS_MAX_LENGTH]);
 
-// tablica zawierająca kolejne dialogi para: etap i  
-
 extern char dialogueData[PHASE][VERSE_NR][VERS_MAX_LENGTH];
-
+extern int dialogueTime[PHASE][VERSE_NR][1];
 
 #endif

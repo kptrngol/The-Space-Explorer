@@ -67,7 +67,7 @@ typedef struct EnEntity
 extern int exitGame;
 extern state gameState;
 extern int gameLost;
-extern int spacePoitns;
+extern int playerDistance;
 extern float gravityAcceleration;
 extern int collisionCooldownStatus;
 extern float collisionCooldownTimer;

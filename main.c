@@ -103,7 +103,7 @@ int main (void)
                                 SyInitializeEntity(globalEntityList,entitiesNumber, screenWidth, screenHeight);
                                 SyPositionSingleEntity(globalEntityList,0,1,screenHeight/2);
                                 int gameLost = 0;
-                                int spacePoitns = 0;
+                                int playerDistance = 0;
                                 float gravityAcceleration = 2.0f;
                                 int collisionCooldownStatus = 0;
                                 float collisionCooldownTimer = 0.0f;
@@ -114,7 +114,7 @@ int main (void)
 
                             }
                             DrawText("signal lost", screenWidth/2-(MeasureText("signal lost",32)/2), screenHeight/2, 32, RED);                            
-                            DrawText(TextFormat("distance: %d", spacePoitns), screenWidth/2-(MeasureText(TextFormat("distance: %d", spacePoitns),16)/2), screenHeight/2 + 32, 16, WHITE);
+                            DrawText(TextFormat("distance: %d", playerDistance), screenWidth/2-(MeasureText(TextFormat("distance: %d", playerDistance),16)/2), screenHeight/2 + 32, 16, WHITE);
                             DrawText("enter* the repair mode", screenWidth/2-(MeasureText("enter* the repair mode",16)/2), screenHeight/2 + 48, 16, WHITE);
 
                             // DrawText("game: konrad petrenko-goljanek", screenWidth/2-(MeasureText("game: konrad petrenko-goljanek",16)/2), screenHeight/2 + 150, 16, PURPLE);
@@ -137,7 +137,7 @@ int main (void)
                         }
 
                         UpdateMusicStream(musicTheme);
-                        spacePoitns++;
+                        playerDistance++;
                         scrollingBack -= 10.5f;
 
                         if (abs(scrollingBack) >= background.width*6) { scrollingBack = 0.0f;}
@@ -169,7 +169,7 @@ int main (void)
                             DrawTextureEx(second_background,(Vector2){scrollingBack + second_background.width*6,0}, 0.0f, 6.0f,WHITE);
 
                             // Progress info
-                            DrawText(TextFormat("distance: %d", spacePoitns), 10, 20, 16, WHITE);
+                            DrawText(TextFormat("distance: %d", playerDistance), 10, 20, 16, WHITE);
                             DrawText(TextFormat("acceleration: %f", gravityAcceleration), 10, 40, 16, WHITE);
                             DrawText(TextFormat("shuttle damage: %d/3", gameLost), 10, 60, 16, RED);
 
@@ -180,17 +180,20 @@ int main (void)
                             DrawText(TextFormat("speed: %f", speedX), screenWidth-(MeasureText("speed",16))-100, 80, 16, GRAY);
                             DrawText(TextFormat("boostcooldown: %f", boostCooldownTimer), screenWidth-(MeasureText("boostcooldown",16))-100, 100, 16, GRAY);
                             DrawText(TextFormat("boostcooldown st.: %d", boostCooldownStatus), screenWidth-(MeasureText("boostcooldown st.",16))-100, 120, 16, GRAY);
-                            DrawText(TextFormat("boost: %f", boostTimer), screenWidth-(MeasureText("boostcooldown",16))-100, 140, 16, GRAY);
-                            DrawText(TextFormat("boost st.: %d", boostStatus), screenWidth-(MeasureText("boostcooldown st.",16))-100, 160, 16, GRAY);
-                            
-                            // Game dialog box
-
+                            DrawText(TextFormat("boost: %f", boostTimer), screenWidth-(MeasureText("boost",16))-100, 140, 16, GRAY);
+                            DrawText(TextFormat("boost st.: %d", boostStatus), screenWidth-(MeasureText("boost st.",16))-100, 160, 16, GRAY);
+                            DrawText(TextFormat("dialogueT: %f", dialogueT), screenWidth-(MeasureText("dialogueT",16))-100, 180, 16, GRAY);
+                            DrawText(TextFormat("bookmark: %d", bookmark), screenWidth-(MeasureText("bookmark",16))-100, 200, 16, GRAY);
                             // Render
 
                             SyRenderEntity(globalEntityList, playerId, playerAmount, 0, globalTextureList,0);
                             DrawCircleLines(globalEntityList[0].position.x+(65/2), globalEntityList[0].position.y+(65/2),30, YELLOW);
                             SyRenderEntity(globalEntityList, redMeteorsId, redMeteorsAmount, 1, globalTextureList,1);
                             SyRenderEntity(globalEntityList, greenMeteorsId, greenMeteorsAmount, 2, globalTextureList,2);
+
+                            // Game dialog box
+                            SyStoryPhaseSwitch(&currentStoryPhase,playerDistance);
+                            SyPrintDialogue(&currentStoryPhase, dialogueData);
 
                         EndDrawing();
 

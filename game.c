@@ -13,7 +13,7 @@ state gameState = MENU;
 // Initialize main variables
 
 int gameLost = 0;
-int spacePoitns = 0;
+int playerDistance = 0;
 float gravityAcceleration = 2.0f;
 int collisionCooldownStatus = 0;
 float collisionCooldownTimer = 0.0f;
